@@ -28,7 +28,6 @@ module.exports.call = async (client,global,msg,field, ...value) => {
         };
     }
     global.bio[id][field] = value;
-    console.log(global.bio);
     global.bio_save();
     return "";
 }

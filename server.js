@@ -1,14 +1,15 @@
 let global = {};        // to preserve state between functions
 const config = require('./config.json');
+global.config = config;
 const discord = require('discord.js');
 const client = new discord.Client();
 
 const fs = require('fs');
-let commands = [];
+global.commands = [];
 let files = fs.readdirSync('./modules/');
 for (let i=0;i<files.length;i++) {
     let file = files[i].replace('.js','');
-    commands[file] = require(`./modules/${file}`)
+    global.commands[file] = require(`./modules/${file}`)
 }
 global.bio_fields = ["description","quote","job"];
 global.bio = {};
@@ -40,14 +41,14 @@ client.on('message',async (msg)=>{
     let str = msg.content.substr(1);
     let [cmd, ...args] = str.split(' ');
     cmd = cmd.toLowerCase();
-    if (commands[cmd] == undefined) {
+    if (global.commands[cmd] == undefined) {
         msg.channel.send(`${cmd} is not a valid command!`);
         return;
     }
     if (msg.deletable) {
         await msg.delete();
     }
-    let result = await commands[cmd].call(client,global,msg,...args);
+    let result = await global.commands[cmd].call(client,global,msg,...args);
     if (result != "" && result != undefined) {          // if `result` is undefined/blank, don't send anything (it would have been handled)
         msg.channel.send(result);
     }

@@ -1,8 +1,7 @@
-
 module.exports.description = {
     name:"write-bio",
-    description:"Allows users to write their bio for the Friendly Cosmic Station",
-    usage:"!write-bio FIELD VALUE",
+    description:"Allows users to create and edit their bio for the Friendly Cosmic Station",
+    usage:"`!write-bio FIELD VALUE`",
     parameters:[
         {
             name:"field",
@@ -15,6 +14,7 @@ module.exports.description = {
     ]
 }
 module.exports.call = async (client,global,msg,field, ...value) => {
+    field = field.toLowerCase();
     if (!global.bio_fields.includes(field)) return `${field} is not a valid bio field`;
     if (Array.isArray(value)) {
         value = value.join(' ');

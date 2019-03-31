@@ -1,7 +1,7 @@
 module.exports.description = {
-    name:"write-bio",
-    description:"Allows users to write their bio for the Friendly Cosmic Station",
-    usage:"!get-bio USER",
+    name:"get-bio",
+    description:"Allows users to view their own bio, or bios of others on the Friendly Cosmic Station",
+    usage:"`!get-bio` or `!get-bio USER`",
     parameters:[
         {
             name:"USER",

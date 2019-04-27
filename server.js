@@ -86,7 +86,7 @@ setInterval(async()=>{
             lounge_channel.send(`FriendlyCosmonaut just started streaming, @here! Here's the link:  https://www.youtube.com/watch?v=${result.items[0].id.videoId}`);
         } else if (result.items.length == 0 && is_live == true) {
             is_live = false;
-            lounge_channel.send('Thanks for sticking around for the livestream! If you didn\'t, go to hell :D');
+            lounge_channel.send('Thanks for sticking around for the livestream everyone!');
         }
     } catch(e) {
             console.error(e);

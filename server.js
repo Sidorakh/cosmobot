@@ -1,10 +1,11 @@
-let global = {};        // to preserve state between functions
-const config = require('./config.json');
-global.config = config;
 const discord = require('discord.js');
-const client = new discord.Client();
-
+const config = require('./config.json');
 const fs = require('fs');
+const rp = require('request-promise');
+const client = new discord.Client();
+let global = {};        // to preserve state between functions
+
+global.config = config;
 global.commands = [];
 let files = fs.readdirSync('./modules/');
 for (let i=0;i<files.length;i++) {
@@ -56,6 +57,40 @@ client.on('message',async (msg)=>{
 
 });
 
-client.login(config.token,()=>{
+client.on('ready',()=>{
     console.log('Ret-2-Go!');
+    lounge_channel = client.guilds.array()[0].channels.find((ch)=>ch.name==='☕lounge_terminal');
 });
+
+
+
+// Is Live
+let is_live = false;
+let lounge_channel = undefined;
+setInterval(async()=>{
+    try {
+        //is cosmo live
+        var result = await rp({
+            url:'https://script.google.com/macros/s/AKfycbzb8RCjC75TxNlIwoKAtbOdJ17ufswwIf-r5BiidCPES8xJPsK9/exec',
+            method:'get'
+        });
+        if(typeof result != 'object') {
+            result = JSON.parse(result);
+        }
+        // if result returns a livestream
+        // post the livestream into #general
+        // else
+        // do nothing
+        if (result.items.length > 0 && is_live == false) {
+            is_live = true;
+            lounge_channel.send(`FriendlyCosmonaut just started streaming, @here! Here's the link:  https://www.youtube.com/watch?v=${result.items[0].id.videoId}`);
+        } else if (result.items.length == 0 && is_live == true) {
+            is_live = false;
+            lounge_channel.send('Thanks for sticking around for the livestream! If you didn\'t, go to hell :D');
+        }
+    } catch(e) {
+            console.error(e);
+    }
+},1000*10);
+
+client.login(config.token);

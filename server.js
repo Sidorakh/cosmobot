@@ -46,6 +46,9 @@ client.on('message',async (msg)=>{
         if (cmd.replace(/\!/g,'') == '') {
             let result = await global.commands['!'].call(client,global,msg,...args);
             msg.channel.send(result);
+            if (msg.deletable) {
+                msg.delete();
+            }
         } else {
             msg.channel.send(`${cmd} is not a valid command!`);
         }

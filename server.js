@@ -43,7 +43,12 @@ client.on('message',async (msg)=>{
     let [cmd, ...args] = str.split(' ');
     cmd = cmd.toLowerCase();
     if (global.commands[cmd] == undefined) {
-        msg.channel.send(`${cmd} is not a valid command!`);
+        if (cmd.replace(/\!/g,'') == '') {
+            let result = await global.commands['!'].call(client,global,msg,...args);
+            msg.channel.send(result);
+        } else {
+            msg.channel.send(`${cmd} is not a valid command!`);
+        }
         return;
     }
     if (msg.deletable) {
@@ -67,16 +72,19 @@ client.on('ready',()=>{
 // Is Live
 let is_live = false;
 let lounge_channel = undefined;
+/*
 setInterval(async()=>{
     try {
         //is cosmo live
-        var result = await rp({
+        let result = await rp({
             url:'https://script.google.com/macros/s/AKfycbzb8RCjC75TxNlIwoKAtbOdJ17ufswwIf-r5BiidCPES8xJPsK9/exec',
             method:'get'
         });
+        console.log(result);
         if(typeof result != 'object') {
             result = JSON.parse(result);
         }
+
         // if result returns a livestream
         // post the livestream into #general
         // else
@@ -91,6 +99,7 @@ setInterval(async()=>{
     } catch(e) {
             console.error(e);
     }
-},1000*60);
+},1000*600);
+*/
 
 client.login(config.token);

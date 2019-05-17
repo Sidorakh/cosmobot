@@ -1,10 +1,11 @@
 {
   "name": "cosmobot",
   "version": "1.0.0",
-  "description": "",
+  "description": "For the Friendly Cosmic Station Discord Server / Friendly Cosmonaut",
   "main": "index.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "start": "node server.js"
   },
   "author": "",
   "license": "ISC",
@@ -14,5 +15,14 @@
     "express": "^4.16.4",
     "request": "^2.88.0",
     "request-promise": "^4.2.4"
-  }
+  },
+  "devDependencies": {},
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/Sidorakh/cosmobot.git"
+  },
+  "bugs": {
+    "url": "https://github.com/Sidorakh/cosmobot/issues"
+  },
+  "homepage": "https://github.com/Sidorakh/cosmobot#readme"
 }

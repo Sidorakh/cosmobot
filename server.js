@@ -91,6 +91,6 @@ setInterval(async()=>{
     } catch(e) {
             console.error(e);
     }
-},1000*10);
+},1000*60);
 
 client.login(config.token);

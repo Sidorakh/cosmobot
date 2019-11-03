@@ -1,0 +1,100 @@
+<div>
+    <% if (query.success==1) { %>
+        <div class="alert alert-success" role="alert">
+            Role added successfully
+            <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                <span aria-hidden="true">&times;</span>
+            </button>
+        </div>
+    <% } %>
+    <% if (query.success==2) { %>
+        <div class="alert alert-success" role="alert">
+            Role deleted successfully
+            <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                <span aria-hidden="true">&times;</span>
+            </button>
+        </div>
+    <% } %>
+    <% if (query.error==1) { %>
+        <div class="alert alert-danger" role="alert">
+            Role already available
+            <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                <span aria-hidden="true">&times;</span>
+            </button>
+        </div>
+    <% } %>
+    <% if (query.error==2) { %>
+        <div class="alert alert-danger" role="alert">
+            Role does not exist
+            <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                <span aria-hidden="true">&times;</span>
+            </button>
+        </div>
+    <% } %>
+    <% if (query.error==3) { %>
+        <div class="alert alert-danger" role="alert">
+            Role was not initially available
+            <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                <span aria-hidden="true">&times;</span>
+            </button>
+        </div>
+    <% } %>
+    <table class="table table-striped" id="role-table">
+        <thead>
+            <tr class="row">
+                <th class="col" scope="col">
+                    Role ID
+                </th>
+                <th class="col-lg-3" scope="col">
+                    Role Name
+                </th>
+            </tr>
+        </thead>
+        <tbody>
+            <% for (var i=0;i<available_roles.length;i++) { %>
+                <% var role = available_roles[i];%>
+                <tr class="row">
+                    <td class="col-lg-3">
+                        <%= role.id %>
+                    </td>
+                    <%if (role.color != undefined) { %>
+                        <td style="background-color:<%=role.color%>" class="col">
+                            <%= role.name %>
+                            <form action="/role/delete" method="post" class="inline-form">
+                                <input value=<%=role.id%> type="text" class="hidden" name="role_id">
+                                <input type="submit" class="flat-btn" value="&times;">
+                            </form>
+                        </td>
+                    <% } else { %>
+                        <td class="col">
+                            <%= role.name %>
+                            <form action="/role/delete" method="post" class="inline-form">
+                                <input value=<%=role.id%> type="text" class="hidden" name="role_id">
+                                <input type="submit" class="flat-btn" value="&times;">
+                            </form>
+                        </td>
+                    <% } %>
+                    
+                </tr>
+            <% } %>
+        </tbody>
+        <tfoot>
+            <tr class="row">
+                <form method="post" action="/role/add">
+                    <td class="col-lg-3">
+                        Add Role: 
+                    </td>
+                    <td class="col">
+                        <select name="role_id">
+                            <% for (var i=0;i<role_list.length;i++) { %>
+                                <% var role = role_list[i]; %>
+                                <option value=<%=role.id%>> <%= role.name %> </option>
+                            <% } %>
+                        </select>
+                        <input type="submit" value="Add Role">
+                    </td>
+                </form>
+            </tr>
+        </tfoot>
+    </table>
+</div>

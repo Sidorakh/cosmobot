@@ -3,17 +3,18 @@ import * as body_parser from 'body-parser';
 import * as cookie_parser from 'cookie-parser';
 import * as passport from 'passport';
 import * as session from 'express-session';
+import * as connect_sqlite3 from 'connect-sqlite3';
 import {Strategy} from 'passport-discord';
 import {DatabaseHelper} from '../database-helper';
 export class ServerHandler {
     constructor(dbh: DatabaseHelper, g:any) {
         const db = dbh.get_db();
         const app = express();
-
+        const SQLite3Store = connect_sqlite3(session);
         app.use(cookie_parser());
         app.use(body_parser.json());
         app.use(body_parser.urlencoded({extended:false}));
-        app.use(session({secret:process.env.EXPRESS_SECRET,resave:true,saveUninitialized:true}));
+        app.use(session({secret:process.env.EXPRESS_SECRET,resave:true,saveUninitialized:true,store: new SQLite3Store({db:'sessions.db'})}));
         app.use(passport.initialize());
         app.use(passport.session());
         app.use('/assets',express.static('./assets'));
@@ -45,12 +46,27 @@ export class ServerHandler {
         );
 
         passport.use(auth_strategy);
-        passport.serializeUser((user:any,done)=>{
-            active_sessions[user.id] = user;
+        passport.serializeUser(async (user:any,done)=>{
+            //active_sessions[user.id] = user;
+            const stmt_exist = db.prepare(`SELECT * FROM Sessions WHERE UserID=(?)`);
+            const results = await dbh.stmt_all(stmt_exist,user.id);
+            if (results.length > 0) {
+                const stmt_update = db.prepare(`UPDATE Sessions SET SessionData=(?) WHERE UserID=(?)`);
+                await dbh.stmt_run(stmt_update,JSON.stringify(user),user.id);
+            } else {
+                const stmt_insert = db.prepare(`INSERT INTO Sessions (UserID, SessionData) VALUES (?,?)`);
+                await dbh.stmt_run(stmt_insert,user.id,JSON.stringify(user));
+            }
             done(null,user);
         });
-        passport.deserializeUser((user:any,done)=>{
-            done(null,active_sessions[user.id]);
+        passport.deserializeUser(async (user:any,done)=>{
+            //done(null,active_sessions[user.id]);
+            try {
+                const get_user = db.prepare(`SELECT * FROM Sessions WHERE UserID=(?)`);
+                done(null,JSON.parse( (await dbh.stmt_get(get_user,user.id)).SessionData));
+            } catch(e) {
+                done(e,false);
+            }
         });
         app.use('*',async (req,res,next)=>{
             if (req.user) {
@@ -125,6 +141,14 @@ export class ServerHandler {
             const stmt = db.prepare(`DELETE FROM AvailableRoles WHERE RoleID = (?)`);
             await dbh.stmt_run(stmt,role_id);
             res.redirect('/roles?success=2');
+        });
+        app.get('/bio',async (req,res)=>{
+            const bio_list = await dbh.all(`SELECT * FROM Bio`);
+            for (const bio of bio_list) {
+                const user_id = bio.DiscordID;
+                bio.user = await g.get_user(user_id);
+            }
+            res.render('page',{page:'bio', bio_list:bio_list})
         });
         app.listen(process.env.PORT);
     }

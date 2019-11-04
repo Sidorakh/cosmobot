@@ -13,14 +13,18 @@ const dbh = new DatabaseHelper(db);
 
 db.serialize(async ()=>{
     await dbh.run(`CREATE TABLE IF NOT EXISTS Bio (
-        DiscordID TEXT NOT NULL,
+        DiscordID TEXT NOT NULL PRIMARY KEY,
         Description TEXT,
         Quote TEXT,
         Job TEXT
     )`);
     await dbh.run(`CREATE TABLE IF NOT EXISTS AvailableRoles (
-        RoleID TEXT NOT NULL
-    )`)
+        RoleID TEXT NOT NULL PRIMARY KEY
+    )`);
+    await dbh.run(`CREATE TABLE IF NOT EXISTS Sessions (
+        UserID TEXT NOT NULL,
+        SessionData TEXT NOT NULL
+    )`);
 });
 
 const axios = Axios.default;
@@ -69,12 +73,24 @@ const is_mod = async (user_id:string) => {
     }
 }
 
+const get_user = async (user_id:string) =>{
+    const guild = client.guilds.first();
+    try {
+        const user = await guild.fetchMember(user_id);
+        return {username:user.displayName, avatar:user.user.displayAvatarURL};
+    } catch(e) {
+        return null;
+    }
+    
+}
+
 
 
 const server = new ServerHandler(dbh,{
     get_roles:get_roles,
     get_role:get_role,
-    is_mod:is_mod
+    is_mod:is_mod,
+    get_user:get_user
 });
 
 

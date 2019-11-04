@@ -40,3 +40,10 @@
 .inline-form {
     display:inline;
 }
+.inline-code {
+    background-color:#eee;
+    border-radius:0.5em;
+    font-family:monospace;
+    padding:2px;
+    color:#c22;
+}

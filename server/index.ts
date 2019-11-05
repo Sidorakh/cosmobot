@@ -4,6 +4,8 @@ import * as cookie_parser from 'cookie-parser';
 import * as passport from 'passport';
 import * as session from 'express-session';
 import * as connect_sqlite3 from 'connect-sqlite3';
+
+
 import {Strategy} from 'passport-discord';
 import {DatabaseHelper} from '../database-helper';
 export class ServerHandler {
@@ -20,7 +22,7 @@ export class ServerHandler {
         app.use('/assets',express.static('./assets'));
         app.set('view engine', 'ejs');
 
-        const active_sessions = {};
+        // const active_sessions = {};
 
         const auth_strategy = new Strategy ({
                 clientID:process.env.CLIENT_ID,
@@ -53,9 +55,11 @@ export class ServerHandler {
             if (results.length > 0) {
                 const stmt_update = db.prepare(`UPDATE Sessions SET SessionData=(?) WHERE UserID=(?)`);
                 await dbh.stmt_run(stmt_update,JSON.stringify(user),user.id);
+                stmt_update.finalize();
             } else {
                 const stmt_insert = db.prepare(`INSERT INTO Sessions (UserID, SessionData) VALUES (?,?)`);
                 await dbh.stmt_run(stmt_insert,user.id,JSON.stringify(user));
+                stmt_insert.finalize();
             }
             done(null,user);
         });
@@ -118,7 +122,10 @@ export class ServerHandler {
             const role_id = req.body.role_id;
             const stmt_check = db.prepare(`SELECT * FROM AvailableRoles WHERE RoleID=(?)`);
             if ((await dbh.stmt_all(stmt_check,role_id)).length > 0) {
+                stmt_check.finalize();
                 return res.redirect('/roles?error=1')   // role already available
+            } else {
+                stmt_check.finalize();
             }
             const role = g.get_role(role_id);
             if (role == null) {
@@ -126,13 +133,17 @@ export class ServerHandler {
             }
             const stmt = db.prepare(`INSERT INTO AvailableRoles (RoleID) VALUES (?)`);
             await dbh.stmt_run(stmt,role_id);
+            stmt.finalize();
             res.redirect('/roles?success=1');
         });
         app.post('/role/delete',mod_check,async (req,res)=>{
             const role_id = req.body.role_id;
             const stmt_check = db.prepare(`SELECT * FROM AvailableRoles WHERE RoleID=(?)`);
             if ((await dbh.stmt_all(stmt_check,role_id)).length == 0) {
+                stmt_check.finalize();
                 return res.redirect('/roles?error=3')   // role not available
+            } else {
+                stmt_check.finalize();
             }
             const role = g.get_role(role_id);
             if (role == null) {
@@ -140,16 +151,43 @@ export class ServerHandler {
             }
             const stmt = db.prepare(`DELETE FROM AvailableRoles WHERE RoleID = (?)`);
             await dbh.stmt_run(stmt,role_id);
+            stmt.finalize();
             res.redirect('/roles?success=2');
         });
         app.get('/bio',async (req,res)=>{
             const bio_list = await dbh.all(`SELECT * FROM Bio`);
+            const stmt_my_bio = db.prepare(`SELECT * FROM Bio WHERE DiscordID=(?)`);
+            //@ts-ignore
+            const my_bio = await dbh.stmt_get(stmt_my_bio,req.user.id);
             for (const bio of bio_list) {
                 const user_id = bio.DiscordID;
                 bio.user = await g.get_user(user_id);
             }
-            res.render('page',{page:'bio', bio_list:bio_list})
+            res.render('page',{page:'bio', bio_list:bio_list, my_bio:(my_bio != undefined ? my_bio : {}), user:req.user, query:req.query});
         });
+        
+        app.post('/bio/update',async(req,res)=>{
+            //@ts-ignore
+            const user_id = req.user.id;
+            const stmt_check = db.prepare(`SELECT * FROM Bio WHERE DiscordID=(?)`);
+            const result = await dbh.stmt_all(stmt_check,user_id);
+            console.log(req.body);
+            try {
+                if (result.length > 0) {
+                    const stmt_update = db.prepare(`UPDATE Bio SET Description=(?), Quote=(?), Job=(?) WHERE DiscordID=(?)`);
+                    await dbh.stmt_run(stmt_update,req.body.description, req.body.quote, req.body.job_title, user_id);
+                    stmt_update.finalize();
+                } else {
+                    const stmt_insert = db.prepare(`INSERT INTO Bio (DiscordID, Description, Quote, Job) VALUES (?,?,?,?)`);
+                    await dbh.stmt_run(stmt_insert,user_id,req.body.description,req.body.quote,req.body.job_title)
+                    stmt_insert.finalize();
+                }
+                res.redirect('/bio?success=1');
+            } catch(e) {
+                res.redirect('/bio?error=1');
+            }
+        })
+
         app.listen(process.env.PORT);
     }
 }

@@ -6,6 +6,7 @@ import * as sqlite3_i from 'sqlite3';
 import {config} from './config';
 import {DatabaseHelper} from './database-helper';
 import {ServerHandler} from './server';
+import * as commands from './commands';
 
 const sqlite3 = sqlite3_i.verbose();
 const db = new sqlite3.Database('cosmobot.db');
@@ -31,13 +32,23 @@ const axios = Axios.default;
 
 const client = new discord.Client();
 
-client.on('message',(msg)=>{
+client.on('message',async (msg)=>{
     
     // Throw out message if it doens't start with the prefix
     if (msg.content[0] !== config.prefix) {
         return;
     }
-    get_roles();
+    const content = msg.content.slice(1);
+    const [cmd, ...args] = content.split(' ');
+    let msg_delete = false;
+    if (commands[cmd]) {
+        msg_delete = true;
+        const response: string | discord.RichEmbed = await commands[cmd].command({},msg,args)
+        msg.channel.send(response);
+    }
+    if (msg.deletable && msg_delete === true) {
+        await msg.delete();
+    }
 
 });
 
@@ -48,7 +59,7 @@ const get_roles = () => {
     const roles = guild.roles.array();
     const role_list = [];
     for (const role of roles) {
-        role_list.push({id:role.id, name:role.name, color: (role.hexColor == '#000000' ? undefined : role.hexColor)});  // undefined means no color
+        role_list.push({id:role.id, name:role.name, color: (role.hexColor == '#000000' ? undefined : role.hexColor)});  // undefined replaces no color
     }
     //console.log(role_list);
     return role_list;
@@ -77,7 +88,7 @@ const get_user = async (user_id:string) =>{
     const guild = client.guilds.first();
     try {
         const user = await guild.fetchMember(user_id);
-        return {username:user.displayName, avatar:user.user.displayAvatarURL};
+        return {username:(user.nickname ? user.nickname : user.user.username), avatar:user.user.displayAvatarURL};
     } catch(e) {
         return null;
     }

@@ -158,7 +158,7 @@ export class ServerHandler {
             const bio_list = await dbh.all(`SELECT * FROM Bio`);
             const stmt_my_bio = db.prepare(`SELECT * FROM Bio WHERE DiscordID=(?)`);
             //@ts-ignore
-            const my_bio = await dbh.stmt_get(stmt_my_bio,req.user.id);
+            const my_bio = (req.user && req.user.id) ? (await dbh.stmt_get(stmt_my_bio,req.user.id) ) : ({});
             for (const bio of bio_list) {
                 const user_id = bio.DiscordID;
                 bio.user = await g.get_user(user_id);

@@ -89,10 +89,14 @@ const get_role = (role_id: string) => {
 
 const is_mod = async (user_id:string) => {
     const guild = client.guilds.first();
-    const user = await guild.fetchMember(user_id);
-    if (user.roles.find(r=>r.id == process.env.MOD_ROLE_ID)) {
-        return true;
-    } else {
+    try {
+        const user = await guild.fetchMember(user_id);
+        if (user.roles.find(r=>r.id == process.env.MOD_ROLE_ID)) {
+            return true;
+        } else {
+            return false;
+        }
+    } catch(e) {
         return false;
     }
 }

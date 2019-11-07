@@ -65,6 +65,10 @@ client.on('message',async (msg)=>{
 
 });
 
+client.on('error',(e)=>{
+    console.error(e);
+});
+
 client.login(process.env.TOKEN);
 
 const get_roles = () => {

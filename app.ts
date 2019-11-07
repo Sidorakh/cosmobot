@@ -3,7 +3,6 @@ require('dotenv').config();
 import * as discord from 'discord.js';
 import * as Axios from 'axios';
 import * as sqlite3_i from 'sqlite3';
-import {config} from './config';
 import {DatabaseHelper} from './database-helper';
 import {ServerHandler} from './server';
 import * as commands from './commands';
@@ -35,16 +34,30 @@ const client = new discord.Client();
 client.on('message',async (msg)=>{
     
     // Throw out message if it doens't start with the prefix
-    if (msg.content[0] !== config.prefix) {
+    if (msg.content[0] !== process.env.PREFIX) {
         return;
     }
+
+
     const content = msg.content.slice(1);
     const [cmd, ...args] = content.split(' ');
     let msg_delete = false;
     if (commands[cmd]) {
+
+        const g = {
+            dbh:dbh,
+            commands:commands,
+            get_role:get_role,
+            get_roles:get_roles,
+            is_mod:is_mod,
+            get_user:get_user
+        }
+
         msg_delete = true;
-        const response: string | discord.RichEmbed = await commands[cmd].command({},msg,args)
-        msg.channel.send(response);
+        const response: string | discord.RichEmbed = await commands[cmd].command(g,msg,args);
+        if (response != "") {
+            msg.channel.send(response);
+        }
     }
     if (msg.deletable && msg_delete === true) {
         await msg.delete();

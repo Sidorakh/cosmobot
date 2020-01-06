@@ -43,7 +43,7 @@
     <hr>
     <p>
         <div class="bio-container">
-            <table class="width-100">
+            <table class="width-100 tbl-bio-head">
                 <thead>
                     <tr>
                         <th class="width-25 text-center">
@@ -64,7 +64,7 @@
         </div>
         <div  class="table-header"></div>
         <div class="bio-container">
-            <table class="tbl-bio">
+            <table class="tbl-bio width-100">
                 <tbody>
                 <% for (var i=0;i<bio_list.length;i++) { %>
                     <% var bio = bio_list[i]; %>
@@ -83,7 +83,7 @@
                                     <div class="flexy-item-pad"></div>
                                 </div>
                             </div>
-                        </t>
+                        </td>
                         <td class="width-25">
                             <%= bio.Job %>
                         </td>
@@ -94,6 +94,13 @@
                             <%= bio.Quote %>
                         </td>
                     </tr>
+                    <% if (i < bio_list.length-1) { %>
+                        <tr>
+                            <td colspan=4 class="width-100">
+                                <hr class="space-break">
+                            </td>
+                        </tr>
+                    <% } %>
                 <% } %>
                 </tbody>
             </table>

@@ -1,3 +1,14 @@
+:root {
+    --pale-yellow:#ffedc0;
+}
+
+@font-face {
+    font-family: 'Segment14Regular';
+    src: url('/assets/Segment14.otf') format('opentype');
+    font-weight: normal;
+    font-style: normal;
+}
+
 body {
     background-color:#1a1921;
     background-image:url('/assets/background.svg');
@@ -8,6 +19,7 @@ body {
 #page-container {
     padding: 0 100px;
     background-image:url('/assets/page-background.svg');
+    background-repeat: no-repeat;
     background-size: 100%;
     height:100vh;
 }
@@ -31,7 +43,7 @@ body {
 }
 
 .nav > li > a {
-    color:#ffedc0;
+    color:var(--pale-yellow);
     
     text-decoration: underline;
     font-style:italic;
@@ -96,8 +108,20 @@ body {
     width:100%;
 }
 
+
+.logo-circuit {
+    height:4em;
+    padding-top:0.5em;
+    padding-left:0.5em;
+}
+
+.flip {
+    transform:scaleX(-1);
+}
+
 .table-header {
     background-image:url("/assets/table-header.svg");
+    background-repeat: no-repeat;
     background-size:100%;
     padding: 2.5em 0em;
     margin-bottom: -3em;
@@ -146,12 +170,12 @@ body {
     border-radius:10px;
     border:none;
     font-family:'Segment14Regular';
-    background-color:#ffedc0;
+    background-color:var(--pale-yellow);
 }
 
 .bio-label {
     font-family:'Segment14Regular';
-    color:#ffedc0;
+    color:var(--pale-yellow);
 }
 
 .width-25 {
@@ -200,5 +224,29 @@ div.role-input>button>div>div>div {
 .role-row {
     /*padding: 0px 0px;*/
     height:2em;
+}
 
+hr.space-break {
+    border: 0;
+    background-image: url('/assets/line-break.svg');
+    background-repeat: no-repeat;
+    height:1em;
+}
+
+.webkit-middle {
+    vertical-align:-webkit-baseline-middle;
+    height: 100%;;
+}
+
+.tbl-bio {
+    /*color: var(--pale-yellow);*/
+    color:#ddd;
+}
+
+.tbl-bio-head {
+    color: var(--pale-yellow);
+}
+
+.header {
+    padding-top:2em;
 }

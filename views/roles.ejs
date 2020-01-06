@@ -108,26 +108,26 @@
     </div>    
     <div  class="table-header"></div>
     <div class="bio-container">
-        <table class="width-100 tbl-bio">
-            <tfoot>
-                <form method="post" action="/role/add" class="inline-form">
-                <tr class="row">
-                    <td class="width-50 text-center">
-                        Add Role: 
-                    </td>
-                    <td class="width-50">
-                        <select name="role_id" class="role-input selectpicker width-50" data-style="btn-dark">
+        <form method="post" action="/role/add" class="inline-form">
+            <table class="width-100 tbl-bio">
+                <tfoot>
+                    <tr class="row">
+                        <td class="width-50 text-center">
+                            Add Role: 
+                        </td>
+                        <td class="width-50">
+                            <select name="role_id" class="role-input selectpicker width-50" data-style="btn-dark">
 
-                            <% for (var i=0;i<role_list.length;i++) { %>
-                                <% var role = role_list[i]; %>
-                                <option value=<%=role.id%> class="role-input"> <%= role.name %> </option>
-                            <% } %>
-                        </select>
-                        <input type="submit" value="Add Role" class="bio-update webkit-middle">
-                    </td>
-                </tr>
-                </form>
-            </tfoot>
-        </table>
+                                <% for (var i=0;i<role_list.length;i++) { %>
+                                    <% var role = role_list[i]; %>
+                                    <option value=<%=role.id%> class="role-input"> <%= role.name %> </option>
+                                <% } %>
+                            </select>
+                            <input type="submit" value="Add Role" class="bio-update webkit-middle">
+                        </td>
+                    </tr>
+                </tfoot>
+            </table>
+        </form>
     </div>
 </div>

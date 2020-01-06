@@ -1,0 +1,126 @@
+<div>
+    <% if (query.success==1) { %>
+        <div class="alert alert-success" role="alert">
+            Role added successfully
+            <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                <span aria-hidden="true">&times;</span>
+            </button>
+        </div>
+    <% } %>
+    <% if (query.success==2) { %>
+        <div class="alert alert-success" role="alert">
+            Role deleted successfully
+            <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                <span aria-hidden="true">&times;</span>
+            </button>
+        </div>
+    <% } %>
+    <% if (query.error==1) { %>
+        <div class="alert alert-danger" role="alert">
+            Role already available
+            <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                <span aria-hidden="true">&times;</span>
+            </button>
+        </div>
+    <% } %>
+    <% if (query.error==2) { %>
+        <div class="alert alert-danger" role="alert">
+            Role does not exist
+            <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                <span aria-hidden="true">&times;</span>
+            </button>
+        </div>
+    <% } %>
+    <% if (query.error==3) { %>
+        <div class="alert alert-danger" role="alert">
+            Role was not initially available
+            <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                <span aria-hidden="true">&times;</span>
+            </button>
+        </div>
+    <% } %>
+    <div>
+        These roles are available via the <span class="inline-code">!role</span> command
+    </div>
+    <hr>
+    <div class="bio-container">
+        <table class="width-100">
+            <thead>
+                <tr class="row">
+                    <th class="width-50 text-center" scope="col">
+                        Role ID
+                    </th>
+                    <th class="width-50 text-center" scope="col">
+                        Role Name
+                    </th>
+                </tr>
+            </thead>
+        </table>
+    </div>
+    <div class="table-header"></div>
+    <div class="bio-container">
+        <table class="width-100">
+            <tbody>
+                <% for (var i=0;i<available_roles.length;i++) { %>
+                    <% var role = available_roles[i];%>
+                    <tr class="role-row">
+                        <td class="width-50 cell role-row text-center">
+                            <%= role.id %>
+                        </td>
+                        <%if (role.color != undefined) { %>
+                            <td class="width-50 cell text-center">
+                                <div class="flexy">
+                                    <div class="flexy-item-pad"></div>
+                                    <div class="flexy-item">
+                                        <div style=<%=`background-color:${role.color}`%> class="role-chip">
+                                            <%= role.name %>
+                                            <form action="/role/delete" method="post" class="inline-form">
+                                                <input value=<%=role.id%> type="text" class="hidden" name="role_id">
+                                                <input type="submit" class="flat-btn" value="&times;">
+                                            </form>
+                                        </div>
+                                    </div>
+                                    <div class="flexy-item-pad"></div>
+                                </div>
+                            </td>
+                        <% } else { %>
+                            <td class="width-50 cell role-row text-center">
+                                <div style="background-color:#222" class="role-chip">
+                                    <%= role.name %>
+                                    <form action="/role/delete" method="post" class="inline-form">
+                                        <input value=<%=role.id%> type="text" class="hidden" name="role_id">
+                                        <input type="submit" class="flat-btn" value="&times;">
+                                    </form>
+                                </div>
+                            </td>
+                        <% } %>
+                        
+                    </tr>
+                <% } %>
+            </tbody>
+        </table>
+    </div>    
+    <div  class="table-header"></div>
+    <div class="bio-container">
+        <table class="width-100">
+            <tfoot>
+                <tr class="row">
+                    <form method="post" action="/role/add">
+                        <td class="width-50 text-center">
+                            Add Role: 
+                        </td>
+                        <td class="width-50">
+                            <select name="role_id" class="role-input selectpicker" data-style="btn-dark">
+                                <% for (var i=0;i<role_list.length;i++) { %>
+                                    <% var role = role_list[i]; %>
+                                    <option value=<%=role.id%> class="role-input"> <%= role.name %> </option>
+                                <% } %>
+                            </select>
+                            <input type="submit" value="Add Role">
+                        </td>
+                    </form>
+                </tr>
+            </tfoot>
+        </table>
+    </div>
+</div>

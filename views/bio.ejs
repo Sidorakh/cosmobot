@@ -1,0 +1,102 @@
+<div> 
+    <% if (query.success==1) { %>
+        <div class="alert alert-success" role="alert">
+            Bio updated successfully
+            <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                <span aria-hidden="true">&times;</span>
+            </button>
+        </div>
+    <% } %>
+    <% if (query.error==1) { %>
+        <div class="alert alert-danger" role="alert">
+            Error occured on update
+            <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                <span aria-hidden="true">&times;</span>
+            </button>
+        </div>
+    <% } %>
+    <p>
+        <form action="/bio/update" method="post">
+            <div class="form-group row">
+                <label for="job_title" class="col-sm-2 col-form-label bio-label"> Job </label>
+                <div class="col-sm-10">
+                    <input type="text" value="<%= my_bio.Job%>" name="job_title" id="job_title" class="bio-input">
+                </div>
+            </div>
+            <div class="form-group row">
+                <label for="description" class="col-sm-2 col-form-label bio-label"> Description </label>
+                <div class="col-sm-10">
+                    <input type="text" value="<%= my_bio.Description%>" name="description" id="description" class="bio-input">
+                </div>
+            </div>
+            <div class="form-group row">
+                <label for="quote" class="col-sm-2 col-form-label bio-label"> Quote </label>
+                <div class="col-sm-10">
+                    <input type="text" value="<%= my_bio.Quote%>" name="quote" id="quote" class="bio-input">
+                </div>
+            </div>
+            <div class="width-100">
+                <div class="align-right"><input type="submit" class="bio-update" value="Update Bio"></div>
+            </div>
+        </form>
+    </p>
+    <hr>
+    <p>
+        <div class="bio-container">
+            <table class="width-100">
+                <thead>
+                    <tr>
+                        <th class="width-25 text-center">
+                            User
+                        </th>
+                        <th class="width-25 text-center">
+                            Job
+                        </th>
+                        <th class="width-25 text-center">
+                            Description
+                        </th>
+                        <th class="width-25 text-center">
+                            Quote
+                        </th>
+                    </tr>
+                </thead>
+            </table>
+        </div>
+        <div  class="table-header"></div>
+        <div class="bio-container">
+            <table class="tbl-bio">
+                <tbody>
+                <% for (var i=0;i<bio_list.length;i++) { %>
+                    <% var bio = bio_list[i]; %>
+                    <tr>
+                        <td class="width-25">
+                            <div class="container">
+                                <div class="row flexy">
+                                    <div class="flexy-item-pad"></div>
+                                    <div class="flexy-item"><img src="<%=bio.user.avatar%>" class="avatar-bio"></div>
+                                    <div class="flexy-item-pad"></div>
+                                </div>
+                                <div class="row flexy">
+                                    
+                                    <div class="flexy-item-pad"></div>
+                                    <div class="flexy-item"><span class="text-center width-100"><%= bio.user.username %></span></div>
+                                    <div class="flexy-item-pad"></div>
+                                </div>
+                            </div>
+                        </t>
+                        <td class="width-25">
+                            <%= bio.Job %>
+                        </td>
+                        <td class="width-25">
+                            <%= bio.Description %>
+                        </td>
+                        <td class="width-25">
+                            <%= bio.Quote %>
+                        </td>
+                    </tr>
+                <% } %>
+                </tbody>
+            </table>
+        </div>
+    </p>
+</div>

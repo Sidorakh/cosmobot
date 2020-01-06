@@ -84,5 +84,5 @@ typings/
 .dynamodb/
 
 # config.json (keys stored here) and bio.json (this is safe to keep away from source control)
-config.json
-bio.json
+cosmobot.db
+sessions.db

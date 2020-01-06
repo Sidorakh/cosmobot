@@ -1,0 +1,20 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1920 1080">
+    <defs>
+        <style>
+            .cls-1{fill:#1a1921;}.cls-14,.cls-17,.cls-19,.cls-2,.cls-3,.cls-4{fill:#ffedc0;}.cls-2{opacity:0.03;}.cls-3{opacity:0.05;}.cls-4{opacity:0.07;}.cls-5{fill:#201d28;}.cls-6{fill:#362c3d;}.cls-13,.cls-15,.cls-20,.cls-21,.cls-7,.cls-8{fill:none;}.cls-20,.cls-7,.cls-8{stroke:#362c3d;}.cls-7{stroke-linejoin:bevel;}.cls-20,.cls-21,.cls-7{stroke-width:2px;}.cls-13,.cls-15,.cls-20,.cls-21,.cls-8{stroke-miterlimit:10;}.cls-9{fill:#e89e62;}.cls-10{fill:#ffd664;}.cls-11{fill:#caefca;}.cls-12{fill:#83c6ab;}.cls-13,.cls-21{stroke:#ffedc0;}.cls-13{opacity:0.75;}.cls-15{stroke:#8e7b75;}.cls-16{opacity:0.1;}.cls-17,.cls-19{font-size:20.73px;}.cls-17{font-family:LCDNormal, LCD;}.cls-18{font-family:MyriadPro-Regular, Myriad Pro;}.cls-19{font-family:CourierNewPS-ItalicMT, Courier New;font-style:italic;}
+        </style>
+    </defs>
+    <g id="BG">
+        <rect class="cls-1" width="1920" height="1080" />
+    </g>
+    <g xmlns="http://www.w3.org/2000/svg" id="Layer_7" data-name="Layer 7">
+        <polygon class="cls-2" points="1622.41 398.98 1618.05 422.77 1613.69 398.98 1597.84 394.62 1613.69 390.26 1618.05 366.48 1622.41 390.26 1638.27 394.62 1622.41 398.98"/>
+        <polygon class="cls-2" points="1812.15 176.17 1807.79 199.95 1803.43 176.17 1787.57 171.81 1803.43 167.45 1807.79 143.67 1812.15 167.45 1828 171.81 1812.15 176.17"/>
+        <polygon class="cls-3" points="1729.05 783.93 1724.69 807.71 1720.33 783.93 1704.48 779.57 1720.33 775.21 1724.69 751.42 1729.05 775.21 1744.91 779.57 1729.05 783.93"/>
+        <polygon class="cls-4" points="211.85 164.54 224.86 235.48 237.87 164.54 285.16 151.53 237.87 138.53 224.86 67.58 211.85 138.53 164.56 151.53 211.85 164.54"/>
+        <polygon class="cls-4" points="237.6 801.17 246.04 847.2 254.48 801.17 285.16 792.74 254.48 784.3 246.04 738.27 237.6 784.3 206.92 792.74 237.6 801.17"/>
+        <polygon class="cls-4" points="1748.17 509.5 1756.61 555.53 1765.04 509.5 1795.73 501.07 1765.04 492.63 1756.61 446.6 1748.17 492.63 1717.48 501.07 1748.17 509.5"/>
+        <polygon class="cls-2" points="101.49 655.11 106.83 684.23 112.17 655.11 131.58 649.77 112.17 644.43 106.83 615.31 101.49 644.43 82.08 649.77 101.49 655.11"/>
+        <polygon class="cls-2" points="280.8 398.98 285.16 422.77 289.52 398.98 305.38 394.62 289.52 390.26 285.16 366.48 280.8 390.26 264.95 394.62 280.8 398.98"/>
+    </g>
+</svg>

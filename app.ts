@@ -111,7 +111,7 @@ const get_user = async (user_id:string) =>{
         const user = await guild.fetchMember(user_id);
         return {username:(user.nickname ? user.nickname : user.user.username), avatar:user.user.displayAvatarURL};
     } catch(e) {
-        return null;
+        return {username:"Nicholas Cage",avatar:"https://www.placecage.com/512/512"};
     }
     
 }

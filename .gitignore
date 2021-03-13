@@ -86,3 +86,7 @@ typings/
 # config.json (keys stored here) and bio.json (this is safe to keep away from source control)
 cosmobot.db
 sessions.db
+
+
+# firebase-admin
+admin.json

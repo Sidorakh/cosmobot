@@ -9,30 +9,6 @@
   },
   "author": "",
   "license": "ISC",
-  "dependencies": {
-    "@types/axios": "^0.14.0",
-    "@types/dotenv": "^8.2.0",
-    "@types/node": "^12.12.5",
-    "@types/passport": "^1.0.1",
-    "@types/passport-discord": "^0.1.3",
-    "@types/sqlite3": "^3.1.5",
-    "axios": "^0.19.0",
-    "body-parser": "^1.19.0",
-    "connect-sqlite3": "^0.9.11",
-    "cookie-parser": "^1.4.4",
-    "discord.js": "^11.4.2",
-    "dotenv": "^8.2.0",
-    "ejs": "^2.7.1",
-    "express": "^4.17.1",
-    "express-session": "^1.17.0",
-    "passport": "^0.4.0",
-    "passport-discord": "^0.1.3",
-    "request": "^2.88.0",
-    "request-promise": "^4.2.4",
-    "sqlite3": "^4.1.1",
-    "typescript": "^3.6.4"
-  },
-  "devDependencies": {},
   "repository": {
     "type": "git",
     "url": "git+https://github.com/Sidorakh/cosmobot.git"
@@ -40,5 +16,13 @@
   "bugs": {
     "url": "https://github.com/Sidorakh/cosmobot/issues"
   },
-  "homepage": "https://github.com/Sidorakh/cosmobot#readme"
+  "homepage": "https://github.com/Sidorakh/cosmobot#readme",
+  "dependencies": {
+    "@types/express": "^4.17.11",
+    "axios": "^0.21.1",
+    "discord.js": "^12.5.1",
+    "dotenv": "^8.2.0",
+    "express": "^4.17.1",
+    "firebase-admin": "^9.5.0"
+  }
 }

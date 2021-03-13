@@ -1,5 +1,5 @@
 import * as discord from 'discord.js';
-export const command = (g: any,msg: discord.Message,args: string[]):string=>{
+export const command = (msg: discord.Message,args: string[]):string=>{
     
     return args.join(' ');
 }

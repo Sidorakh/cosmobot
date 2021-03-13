@@ -1,128 +1,103 @@
 require('dotenv').config();
-
 import * as discord from 'discord.js';
-import * as Axios from 'axios';
-import * as sqlite3_i from 'sqlite3';
-import {DatabaseHelper} from './database-helper';
-import {ServerHandler} from './server';
-import * as commands from './commands';
+import * as express from 'express';
+import {urlencoded, json} from 'express';
 
-const sqlite3 = sqlite3_i.verbose();
-const db = new sqlite3.Database('cosmobot.db');
-const dbh = new DatabaseHelper(db);
 
-db.serialize(async ()=>{
-    await dbh.run(`CREATE TABLE IF NOT EXISTS Bio (
-        DiscordID TEXT NOT NULL PRIMARY KEY,
-        Description TEXT,
-        Quote TEXT,
-        Job TEXT
-    )`);
-    await dbh.run(`CREATE TABLE IF NOT EXISTS AvailableRoles (
-        RoleID TEXT NOT NULL PRIMARY KEY
-    )`);
-    await dbh.run(`CREATE TABLE IF NOT EXISTS Sessions (
-        UserID TEXT NOT NULL,
-        SessionData TEXT NOT NULL
-    )`);
-});
+import commands from './commands';
+import {firestore} from './firebase';
 
-const axios = Axios.default;
+let ready = false;
+
+
+
+
+
+let role_collection = 'cosmobot-roles';
 
 const client = new discord.Client();
+client.login(process.env.TOKEN);
 
-client.on('message',async (msg)=>{
+client.on('ready',async ()=>{
+    const guild = client.guilds.cache.first();
     
-    // Throw out message if it doens't start with the prefix
-    if (msg.content[0] !== process.env.PREFIX) {
-        return;
+    if (guild.id == '441976514289074197') {
+        role_collection = 'cosmobot-dev-roles';
     }
 
-
-    const content = msg.content.slice(1);
-    const [cmd, ...args] = content.split(' ');
-    let msg_delete = false;
-    if (commands[cmd]) {
-
-        const g = {
-            dbh:dbh,
-            commands:commands,
-            get_role:get_role,
-            get_roles:get_roles,
-            is_mod:is_mod,
-            get_user:get_user
+    guild.roles.cache.array().forEach(async role=>{
+        try {
+            await firestore.collection(role_collection).doc(role.id).create({
+                assignable: false,
+                name: role.name,
+                color: role.hexColor,
+            });
+        } catch(e) {
+            
         }
+    });
+    ready = true;
+    /*.forEach(async role=>{
+        
+    });*/
+})
 
-        msg_delete = true;
-        const response: string | discord.RichEmbed = await commands[cmd].command(g,msg,args);
-        if (response != "") {
+client.on('roleCreate',async role=>{
+    await firestore.collection(role_collection).doc(role.id).set({
+        assignable: false,
+        name: role.name,
+        color: role.hexColor,
+    });
+
+});
+
+client.on('roleUpdate',async role=>{
+    await firestore.collection(role_collection).doc(role.id).update({
+        name: role.name,
+        color: role.hexColor,
+    });
+});
+
+client.on('roleDelete', async role=>{
+    await firestore.collection(role_collection).doc(role.id).delete();
+});
+
+client.on('message',async msg=>{
+    if (!msg.content.startsWith(process.env.PREFIX)) return;
+
+    const data = msg.content.slice(1).split(' ');
+    const cmd = data[0].toLowerCase();
+    const args = data.slice(1);
+
+    if (commands[cmd] != undefined) {
+        if (msg.deletable) {
+            await msg.delete()
+        }
+        const response = await commands[cmd].command(msg,args);
+        if (!!response) {
             msg.channel.send(response);
         }
     }
-    if (msg.deletable && msg_delete === true) {
-        await msg.delete();
-    }
-
-});
-
-client.on('error',(e)=>{
-    //console.error(e);
-});
-
-client.login(process.env.TOKEN);
-
-const get_roles = () => {
-    const guild = client.guilds.first();
-    const roles = guild.roles.array();
-    const role_list = [];
-    for (const role of roles) {
-        role_list.push({id:role.id, name:role.name, color: (role.hexColor == '#000000' ? undefined : role.hexColor)});  // undefined replaces no color
-    }
-    //console.log(role_list);
-    return role_list;
-}
-const get_role = (role_id: string) => {
-    const guild = client.guilds.first();
-    const role = guild.roles.find(r => r.id == role_id);
-    if (role != null) {
-        return {id:role.id, name:role.name, color: (role.hexColor == '#000000' ? undefined : role.hexColor)};
-    } else {
-        return null;
-    }
-}
-
-const is_mod = async (user_id:string) => {
-    const guild = client.guilds.first();
-    try {
-        const user = await guild.fetchMember(user_id);
-        if (user.roles.find(r=>r.id == process.env.MOD_ROLE_ID)) {
-            return true;
-        } else {
-            return false;
-        }
-    } catch(e) {
-        return false;
-    }
-}
-
-const get_user = async (user_id:string) =>{
-    const guild = client.guilds.first();
-    try {
-        const user = await guild.fetchMember(user_id);
-        return {username:(user.nickname ? user.nickname : user.user.username), avatar:user.user.displayAvatarURL};
-    } catch(e) {
-        return {username:"Nicholas Cage",avatar:"https://www.placecage.com/512/512"};
-    }
-    
-}
-
-
-
-const server = new ServerHandler(dbh,{
-    get_roles:get_roles,
-    get_role:get_role,
-    is_mod:is_mod,
-    get_user:get_user
 });
 
 
+const app = express();
+app.listen(process.env.PORT);
+app.use(json());
+app.use(urlencoded({extended:false}));
+
+app.get('/is-admin/:id',async(req,res)=>{
+    if (ready == false) {
+        return res.json({
+            status:'error',
+            reason: 'not ready',
+        });
+    }
+    const guild = client.guilds.cache.first();
+    const member = await guild.members.fetch(req.params.id);
+    const is_admin = member.roles.cache.some(role=>role.name=='moderator');
+    res.json({
+        status:'success',
+        is_admin,
+    });
+});

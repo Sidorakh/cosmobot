@@ -13,4 +13,4 @@ Use `npm start` or `node server` to start the bot. Make sure to copy `config-tem
 | `say` | `!say` | Repeats a user-given string |
 | `yt` | `!yt <search term>` | Searches youtube for a video |
 | `role` | `!role [role]` | If a role is specified, toggles the given role, otherwise, lists all available roles |
-| `help` | `!help [command]` | Sends a list of commands annd some absic help for each, or sends detailed help for a single command if one is specified |
+| `help` | `!help [command]` | Sends a list of commands and some basic help for each, or sends detailed help for a single command if one is specified |

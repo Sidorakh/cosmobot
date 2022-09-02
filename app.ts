@@ -4,7 +4,7 @@ import * as express from 'express';
 import {urlencoded, json} from 'express';
 
 
-import commands from './commands';
+import {commands} from './commands';
 import {firestore} from './firebase';
 
 let ready = false;
@@ -19,7 +19,7 @@ const client = new discord.Client();
 client.login(process.env.TOKEN);
 
 client.on('ready',async ()=>{
-    const guild = client.guilds.cache.first();
+    const guild = client.guilds.cache.first()!;
     
     if (guild.id == '441976514289074197') {
         role_collection = 'cosmobot-dev-roles';
@@ -63,7 +63,7 @@ client.on('roleDelete', async role=>{
 });
 
 client.on('message',async msg=>{
-    if (!msg.content.startsWith(process.env.PREFIX)) return;
+    if (!msg.content.startsWith(process.env.PREFIX || '!')) return;
 
     const data = msg.content.slice(1).split(' ');
     const cmd = data[0].toLowerCase();
@@ -93,7 +93,7 @@ app.get('/is-admin/:id',async(req,res)=>{
             reason: 'not ready',
         });
     }
-    const guild = client.guilds.cache.first();
+    const guild = client.guilds.cache.first()!;
     const member = await guild.members.fetch(req.params.id);
     const is_admin = member.roles.cache.some(role=>role.name=='moderator');
     res.json({

@@ -90,3 +90,5 @@ sessions.db
 
 # firebase-admin
 admin.json
+
+./build

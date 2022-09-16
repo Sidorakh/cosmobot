@@ -2,7 +2,7 @@ import * as discord from 'discord.js';
 
 export const command = (g: any,msg: discord.Message,args: string[]):any=>{
     const time = new Date().toISOString();
-    let fields = [];
+    let fields: any[] = [];
     
     if (args[0]) {
         if (g.commands[args[0]]) {
@@ -25,7 +25,7 @@ export const command = (g: any,msg: discord.Message,args: string[]):any=>{
                       url: "https://cosmobot.redshirt.dev",
                       icon_url: "https://i.imgur.com/evyOso1.png"
                     },
-                    fields:[]
+                    fields,
                 }
             }
             if (command.parameters) {
@@ -37,6 +37,7 @@ export const command = (g: any,msg: discord.Message,args: string[]):any=>{
                 }
             }
             embed.embed.fields = fields;
+            // @ts-ignore
             msg.author.send(embed);
         }
     } else {
@@ -65,7 +66,9 @@ export const command = (g: any,msg: discord.Message,args: string[]):any=>{
             const command = g.commands[keys[i]].data;
             fields.push({name:`\`${command.name}\``,value:command.description});
         }
+        // @ts-ignore
         embed.embed.fields = fields;
+        // @ts-ignore
         msg.author.send(embed);
     }
     return "";

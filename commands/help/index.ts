@@ -1,6 +1,6 @@
 import * as discord from 'discord.js';
 // circular import? oh god
-import commands from '../';
+import {commands} from '../';
 export const command = (msg: discord.Message,args: string[]):any=>{
     const time = new Date().toISOString();
     let fields = [];
@@ -37,6 +37,7 @@ export const command = (msg: discord.Message,args: string[]):any=>{
                     })
                 }
             }
+            // @ts-ignore
             embed.embed.fields = fields;
             // @ts-ignore
             msg.author.send(embed);
@@ -67,6 +68,7 @@ export const command = (msg: discord.Message,args: string[]):any=>{
             const command = commands[keys[i]].data;
             fields.push({name:`\`${command.name}\``,value:command.description});
         }
+        // @ts-ignore
         embed.embed.fields = fields;
         // @ts-ignore
         msg.author.send(embed);

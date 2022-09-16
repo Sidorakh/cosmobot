@@ -1,6 +1,6 @@
 require('dotenv').config();
 import * as discord from 'discord.js';
-import * as express from 'express';
+import express from 'express';
 import {urlencoded, json} from 'express';
 
 
